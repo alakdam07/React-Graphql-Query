@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { gql } from "apollo-boost";
+import { useQuery } from "@apollo/react-hooks";
 
-function App() {
+const GET_Countries = gql`
+  query {
+    countries {
+      name
+    }
+  }
+`;
+
+export default function App() {
+  const result = useQuery(GET_Countries);
+
+  const { loading, error, data } = result;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>React + Apollo Client</h1>
+      <h4>Countries</h4>
+      {loading ? (
+        <div>data loading.....</div>
+      ) : error ? <p>jjjj</p> : (
+        <div>
+          <ul>
+            {data.countries.map((i: any, index: number) => (
+              <li key={index}>{i.name}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
 
-export default App;
+
